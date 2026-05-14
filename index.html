@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EduPanel — Digitaler Unterrichtszugang für Spanisch, Informatik und Sport">
+  <title>EduPanel — Lernportal</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎓</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- Animated aurora background -->
+  <div class="aurora" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+  </div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-mark" aria-hidden="true">🎓</div>
+      <div>
+        <span class="logo-name">EduPanel</span>
+        <span class="logo-tagline">Digitaler Unterrichtszugang · Acceso Educativo Digital</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-lang" id="btnLang" title="Sprache wechseln / Cambiar idioma" aria-label="Sprache">
+        <span class="lang-on">DE</span><span class="lang-sep">·</span><span class="lang-off">ES</span>
+      </button>
+      <button class="btn-theme" id="btnTheme" title="Dunkler Modus / Modo oscuro" aria-label="Farbschema wechseln">
+        <span class="theme-icon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Hero ───────────────────────────────────────────────────────────── -->
+  <section class="hero-section">
+    <h1 id="heroTitle">Willkommen im Lernportal</h1>
+    <p id="heroSub">Dein digitaler Unterrichtszugang</p>
+
+    <div class="search-wrap">
+      <div class="search-inner">
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="Suchen…  /  Buscar…"
+          autocomplete="off"
+          aria-label="Ressourcen suchen"
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stats ──────────────────────────────────────────────────────────── -->
+  <div class="stats-row" role="list" aria-label="Statistiken">
+    <div class="stat" role="listitem">
+      <span class="stat-num" id="statNumResources">0</span>
+      <span class="stat-label" id="statLabelResources">Ressourcen</span>
+    </div>
+    <div class="stat" role="listitem">
+      <span class="stat-num" id="statNumSubjects">0</span>
+      <span class="stat-label" id="statLabelSubjects">Fächer</span>
+    </div>
+    <div class="stat" role="listitem">
+      <span class="stat-num" id="statNumTypes">0</span>
+      <span class="stat-label" id="statLabelTypes">Kategorien</span>
+    </div>
+  </div>
+
+  <!-- ── Subject Tabs ───────────────────────────────────────────────────── -->
+  <nav class="tabs-row" aria-label="Fächer">
+    <button class="tab active" data-tab="all" aria-pressed="true">
+      <span class="tab-emoji" aria-hidden="true">⚡</span>
+      <span class="tab-label">Alle</span>
+    </button>
+    <button class="tab" data-tab="espanol" aria-pressed="false">
+      <span class="tab-emoji" aria-hidden="true">🇪🇸</span>
+      <span class="tab-label">Spanisch</span>
+    </button>
+    <button class="tab" data-tab="informatik" aria-pressed="false">
+      <span class="tab-emoji" aria-hidden="true">💻</span>
+      <span class="tab-label">Informatik</span>
+    </button>
+    <button class="tab" data-tab="sport" aria-pressed="false">
+      <span class="tab-emoji" aria-hidden="true">⚽</span>
+      <span class="tab-label">Sport</span>
+    </button>
+  </nav>
+
+  <!-- ── Type Filters ───────────────────────────────────────────────────── -->
+  <div class="filters-row" role="group" aria-label="Ressourcentyp">
+    <button class="filter-btn active" data-filter="all">
+      <span aria-hidden="true">✦</span>
+      <span class="filter-label">Alles</span>
+    </button>
+    <button class="filter-btn" data-filter="qr">
+      <span aria-hidden="true">⬛</span>
+      <span class="filter-label">QR-Codes</span>
+    </button>
+    <button class="filter-btn" data-filter="link">
+      <span aria-hidden="true">🔗</span>
+      <span class="filter-label">Links</span>
+    </button>
+    <button class="filter-btn" data-filter="video">
+      <span aria-hidden="true">▶</span>
+      <span class="filter-label">Videos</span>
+    </button>
+    <button class="filter-btn" data-filter="worksheet">
+      <span aria-hidden="true">📄</span>
+      <span class="filter-label">Arbeitsblätter</span>
+    </button>
+  </div>
+
+  <!-- ── Resource Grid ──────────────────────────────────────────────────── -->
+  <main class="grid-section">
+    <div id="grid" role="list" aria-label="Lernressourcen">
+      <!-- Cards injected by app.js -->
+    </div>
+  </main>
+
+  <!-- ── QR Modal ───────────────────────────────────────────────────────── -->
+  <div
+    class="modal-overlay"
+    id="modalOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
+  >
+    <div class="modal-card">
+      <div id="modalAccent"></div>
+      <button class="modal-close" id="modalClose" aria-label="Schließen">✕</button>
+      <h2 id="modalTitle"></h2>
+      <div id="qrWrap" role="img" aria-label="QR-Code"></div>
+      <p id="modalUrl"></p>
+      <div class="modal-buttons">
+        <button id="modalCopy">Link kopieren</button>
+        <button id="modalDownload">QR speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
