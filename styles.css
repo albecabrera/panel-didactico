@@ -16,10 +16,10 @@
   --r-chip:   8px;
 
   /* Subject gradients */
-  --grad-espanol:   linear-gradient(160deg, #1e0d13 0%, #2e1119 55%, #251010 100%);
-  --grad-informatik:linear-gradient(160deg, #0c172e 0%, #102040 55%, #0c192e 100%);
-  --grad-sport:     linear-gradient(160deg, #0a1e12 0%, #0d2818 55%, #0a1e12 100%);
-  --grad-all:       linear-gradient(160deg, #18181b 0%, #1f1f23 100%);
+  --grad-espanol:   linear-gradient(145deg, #3b0a20 0%, #9b1839 50%, #c2410c 100%);
+  --grad-informatik:linear-gradient(145deg, #0f0a2e 0%, #2d1d7e 48%, #1d4ed8 100%);
+  --grad-sport:     linear-gradient(145deg, #042f1e 0%, #065f46 48%, #0e7490 100%);
+  --grad-all:       linear-gradient(145deg, #18181b 0%, #27272a 100%);
 
   --glow-espanol:   rgba(255,69,58, .35);
   --glow-informatik:rgba(10,132,255, .35);
@@ -376,8 +376,8 @@ button { font-family:inherit; cursor:pointer; border:none; background:none; }
   pointer-events:none; border-radius:inherit;
 }
 .card:hover {
-  transform:translateY(-3px) scale(1.008);
-  box-shadow:0 12px 36px var(--card-glow, rgba(0,0,0,.30));
+  transform:translateY(-4px) scale(1.012);
+  box-shadow:0 16px 44px var(--card-glow, rgba(0,0,0,.38));
 }
 
 /* Header row: icon box + type chip */

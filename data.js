@@ -157,8 +157,9 @@ const RESOURCES = [
 const SUBJECT_CONFIG = {
   espanol: {
     label_de: 'Spanisch',     label_es: 'Español',
-    gradient: 'linear-gradient(145deg, #1e0d13 0%, #2e1119 55%, #251010 100%)',
-    glow: 'rgba(180,40,65,0.30)',
+    // dark wine → crimson → burnt sienna: Mediterranean, warm, rich
+    gradient: 'linear-gradient(145deg, #3b0a20 0%, #9b1839 50%, #c2410c 100%)',
+    glow: 'rgba(155,24,57,0.38)',
     badge_bg: 'rgba(185,28,28,0.15)',
     badge_border: 'rgba(185,28,28,0.25)',
     badge_color: '#FCA5A5',
@@ -166,8 +167,9 @@ const SUBJECT_CONFIG = {
   },
   informatik: {
     label_de: 'Informatik',   label_es: 'Informática',
-    gradient: 'linear-gradient(145deg, #0c172e 0%, #102040 55%, #0c192e 100%)',
-    glow: 'rgba(37,100,220,0.30)',
+    // deep black-blue → indigo → royal blue: technical depth
+    gradient: 'linear-gradient(145deg, #0f0a2e 0%, #2d1d7e 48%, #1d4ed8 100%)',
+    glow: 'rgba(29,78,216,0.38)',
     badge_bg: 'rgba(37,99,235,0.15)',
     badge_border: 'rgba(37,99,235,0.25)',
     badge_color: '#93C5FD',
@@ -175,8 +177,9 @@ const SUBJECT_CONFIG = {
   },
   sport: {
     label_de: 'Sport',        label_es: 'Deporte',
-    gradient: 'linear-gradient(145deg, #0a1e12 0%, #0d2818 55%, #0a1e12 100%)',
-    glow: 'rgba(10,150,85,0.30)',
+    // dark forest → emerald → teal: fresh energy
+    gradient: 'linear-gradient(145deg, #042f1e 0%, #065f46 48%, #0e7490 100%)',
+    glow: 'rgba(6,95,70,0.38)',
     badge_bg: 'rgba(5,150,105,0.15)',
     badge_border: 'rgba(5,150,105,0.25)',
     badge_color: '#6EE7B7',
