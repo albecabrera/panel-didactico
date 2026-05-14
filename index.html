@@ -13,29 +13,23 @@
 </head>
 <body>
 
-  <!-- Animated aurora background -->
+  <!-- Subtle background orbs -->
   <div class="aurora" aria-hidden="true">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-    <div class="orb orb-4"></div>
   </div>
-  <div class="noise" aria-hidden="true"></div>
 
   <!-- ── Header ─────────────────────────────────────────────────────────── -->
   <header class="header">
     <div class="logo">
       <div class="logo-mark" aria-hidden="true">🎓</div>
-      <div>
-        <span class="logo-name">EduPanel</span>
-        <span class="logo-tagline">Digitaler Unterrichtszugang · Acceso Educativo Digital</span>
-      </div>
+      <span class="logo-name">EduPanel</span>
     </div>
     <div class="header-actions">
       <button class="btn-lang" id="btnLang" title="Sprache wechseln / Cambiar idioma" aria-label="Sprache">
         <span class="lang-on">DE</span><span class="lang-sep">·</span><span class="lang-off">ES</span>
       </button>
-      <button class="btn-theme" id="btnTheme" title="Dunkler Modus / Modo oscuro" aria-label="Farbschema wechseln">
+      <button class="btn-theme" id="btnTheme" title="Dunkler Modus / Modo oscuro" aria-label="Farbschema">
         <span class="theme-icon">🌙</span>
       </button>
     </div>
@@ -43,12 +37,24 @@
 
   <!-- ── Hero ───────────────────────────────────────────────────────────── -->
   <section class="hero-section">
+    <div class="hero-eyebrow">
+      <span>Edu&nbsp;·&nbsp;2026</span>
+    </div>
     <h1 id="heroTitle">Willkommen im Lernportal</h1>
     <p id="heroSub">Dein digitaler Unterrichtszugang</p>
 
+    <div class="hero-actions">
+      <button class="cta-primary" onclick="document.getElementById('grid').scrollIntoView({behavior:'smooth'})">
+        Ressourcen entdecken ↓
+      </button>
+      <a class="cta-secondary" href="https://github.com/albecabrera/panel-didactico" target="_blank" rel="noopener">
+        GitHub ansehen →
+      </a>
+    </div>
+
     <div class="search-wrap">
       <div class="search-inner">
-        <span class="search-icon" aria-hidden="true">🔍</span>
+        <span class="search-icon" aria-hidden="true">⌕</span>
         <input
           type="search"
           id="searchInput"
@@ -61,7 +67,7 @@
   </section>
 
   <!-- ── Stats ──────────────────────────────────────────────────────────── -->
-  <div class="stats-row" role="list" aria-label="Statistiken">
+  <div class="stats-row" data-reveal role="list" aria-label="Statistiken">
     <div class="stat" role="listitem">
       <span class="stat-num" id="statNumResources">0</span>
       <span class="stat-label" id="statLabelResources">Ressourcen</span>
@@ -77,7 +83,7 @@
   </div>
 
   <!-- ── Subject Tabs ───────────────────────────────────────────────────── -->
-  <nav class="tabs-row" aria-label="Fächer">
+  <nav class="tabs-row" data-reveal="delay-1" aria-label="Fächer">
     <button class="tab active" data-tab="all" aria-pressed="true">
       <span class="tab-emoji" aria-hidden="true">⚡</span>
       <span class="tab-label">Alle</span>
@@ -97,25 +103,20 @@
   </nav>
 
   <!-- ── Type Filters ───────────────────────────────────────────────────── -->
-  <div class="filters-row" role="group" aria-label="Ressourcentyp">
+  <div class="filters-row" data-reveal="delay-2" role="group" aria-label="Ressourcentyp">
     <button class="filter-btn active" data-filter="all">
-      <span aria-hidden="true">✦</span>
       <span class="filter-label">Alles</span>
     </button>
     <button class="filter-btn" data-filter="qr">
-      <span aria-hidden="true">⬛</span>
       <span class="filter-label">QR-Codes</span>
     </button>
     <button class="filter-btn" data-filter="link">
-      <span aria-hidden="true">🔗</span>
       <span class="filter-label">Links</span>
     </button>
     <button class="filter-btn" data-filter="video">
-      <span aria-hidden="true">▶</span>
       <span class="filter-label">Videos</span>
     </button>
     <button class="filter-btn" data-filter="worksheet">
-      <span aria-hidden="true">📄</span>
       <span class="filter-label">Arbeitsblätter</span>
     </button>
   </div>
@@ -127,6 +128,17 @@
     </div>
   </main>
 
+  <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+  <footer data-reveal>
+    <p class="footer-text">
+      EduPanel &nbsp;·&nbsp;
+      <a class="footer-link" href="https://github.com/albecabrera/panel-didactico" target="_blank" rel="noopener">
+        github.com/albecabrera/panel-didactico
+      </a>
+      &nbsp;·&nbsp; MIT
+    </p>
+  </footer>
+
   <!-- ── QR Modal ───────────────────────────────────────────────────────── -->
   <div
     class="modal-overlay"
@@ -137,13 +149,15 @@
   >
     <div class="modal-card">
       <div id="modalAccent"></div>
-      <button class="modal-close" id="modalClose" aria-label="Schließen">✕</button>
-      <h2 id="modalTitle"></h2>
-      <div id="qrWrap" role="img" aria-label="QR-Code"></div>
-      <p id="modalUrl"></p>
-      <div class="modal-buttons">
-        <button id="modalCopy">Link kopieren</button>
-        <button id="modalDownload">QR speichern</button>
+      <div class="modal-body">
+        <button class="modal-close" id="modalClose" aria-label="Schließen">✕</button>
+        <h2 id="modalTitle"></h2>
+        <div id="qrWrap" role="img" aria-label="QR-Code"></div>
+        <p id="modalUrl"></p>
+        <div class="modal-buttons">
+          <button id="modalCopy">Link kopieren</button>
+          <button id="modalDownload">QR speichern</button>
+        </div>
       </div>
     </div>
   </div>

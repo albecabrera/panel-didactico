@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupTypeFilters();
   setupSearch();
   setupModal();
+  setupScrollReveal();
   render();
   animateCounters();
 });
@@ -172,11 +173,11 @@ function render() {
 }
 
 function buildCard(r, i) {
-  const cfg = SUBJECT_CONFIG[r.subject];
+  const cfg  = SUBJECT_CONFIG[r.subject];
   const tcfg = TYPE_CONFIG[r.type];
   const lang = STATE.lang;
-  const title = r[`title_${lang}`];
-  const desc  = r[`desc_${lang}`];
+  const title        = r[`title_${lang}`];
+  const desc         = r[`desc_${lang}`];
   const subjectLabel = cfg[`label_${lang}`];
   const typeLabel    = tcfg[`label_${lang}`];
 
@@ -184,45 +185,32 @@ function buildCard(r, i) {
   card.className = 'card';
   card.style.setProperty('--card-grad', cfg.gradient);
   card.style.setProperty('--card-glow', cfg.glow);
-  card.style.animationDelay = `${i * 0.06}s`;
+  card.style.animationDelay = `${i * 0.055}s`;
+  card.setAttribute('role', 'listitem');
 
   card.innerHTML = `
-    <div class="card-glow-border"></div>
-    <div class="card-inner">
-      <div class="card-top">
-        <div class="card-icon" style="background:${cfg.gradient}; box-shadow:0 8px 24px ${cfg.glow}">
-          <span class="card-emoji">${r.emoji}</span>
-        </div>
-        <div class="card-badges">
-          <span class="badge badge-subject"
-            style="background:${cfg.badge_bg};border-color:${cfg.badge_border};color:${cfg.badge_color}">
-            ${subjectLabel}
-          </span>
-          <span class="badge badge-type">${tcfg.icon} ${typeLabel}</span>
-        </div>
-      </div>
+    <div class="card-eyebrow">
+      <span class="type-chip">${tcfg.icon}&nbsp;${typeLabel}</span>
+      <span class="subject-dot" title="${subjectLabel}"></span>
+    </div>
 
+    <div class="card-visual">
+      <span class="card-emoji">${r.emoji}</span>
+    </div>
+
+    <div class="card-body">
+      <p class="card-subject">${subjectLabel}</p>
       <h3 class="card-title">${title}</h3>
       <p class="card-desc">${desc}</p>
+    </div>
 
-      <div class="card-url">
-        <span class="url-icon">🔗</span>
-        <span class="url-text">${r.shortUrl}</span>
-      </div>
-
+    <div class="card-footer">
+      <div class="card-url-chip">↗ ${r.shortUrl}</div>
       <div class="card-actions">
-        <button class="btn btn-primary" data-open="${r.url}">
-          <span>↗</span> ${t('btnOpen')}
-        </button>
-        <button class="btn btn-ghost" data-qr="${r.id}">
-          ⬛ ${t('btnQR')}
-        </button>
+        <button class="btn-card-primary" data-open="${r.url}">${t('btnOpen')} ↗</button>
+        <button class="btn-card-ghost"   data-qr="${r.id}">QR</button>
       </div>
     </div>`;
-
-  // 3-D tilt
-  card.addEventListener('mousemove', onTilt);
-  card.addEventListener('mouseleave', onUntilt);
 
   card.querySelector('[data-open]').addEventListener('click', e => {
     e.stopPropagation();
@@ -236,18 +224,14 @@ function buildCard(r, i) {
   return card;
 }
 
-// ── 3-D Tilt ─────────────────────────────────────────────────────────────────
+// ── Scroll reveal ────────────────────────────────────────────────────────────
 
-function onTilt(e) {
-  const c = e.currentTarget;
-  const { left, top, width, height } = c.getBoundingClientRect();
-  const x = ((e.clientX - left) / width  - 0.5) * 16;
-  const y = ((e.clientY - top)  / height - 0.5) * -16;
-  c.style.transform = `perspective(900px) rotateX(${y}deg) rotateY(${x}deg) translateY(-10px) scale(1.02)`;
-}
-
-function onUntilt(e) {
-  e.currentTarget.style.transform = '';
+function setupScrollReveal() {
+  const obs = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.12 }
+  );
+  document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
 }
 
 // ── Modal ────────────────────────────────────────────────────────────────────
