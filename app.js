@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupTypeFilters();
   setupSearch();
   setupModal();
+  setupViewer();
   setupScrollReveal();
   render();
   animateCounters();
@@ -191,21 +192,16 @@ function buildCard(r, i) {
   card.className = 'card';
   card.style.setProperty('--card-grad', cfg.gradient);
   card.style.setProperty('--card-glow', cfg.glow);
-  card.style.animationDelay = `${i * 0.055}s`;
+  card.style.animationDelay = `${i * 0.045}s`;
   card.setAttribute('role', 'listitem');
 
   card.innerHTML = `
-    <div class="card-eyebrow">
-      <span class="type-chip">${tcfg.icon}&nbsp;${typeLabel}</span>
-      <span class="subject-dot" title="${subjectLabel}"></span>
-    </div>
-
-    <div class="card-visual">
-      <img class="card-icon-img"
-           src="${r.icon}"
-           alt="${title}"
-           loading="lazy"
-           onerror="this.style.opacity='0.3'">
+    <div class="card-header">
+      <div class="card-icon-box">
+        <img class="card-icon-img" src="${r.icon}" alt=""
+             loading="lazy" onerror="this.style.opacity='.2'">
+      </div>
+      <span class="type-chip">${tcfg.icon}&thinsp;${typeLabel}</span>
     </div>
 
     <div class="card-body">
@@ -214,17 +210,14 @@ function buildCard(r, i) {
       <p class="card-desc">${desc}</p>
     </div>
 
-    <div class="card-footer">
-      <div class="card-url-chip">↗ ${r.shortUrl}</div>
-      <div class="card-actions">
-        <button class="btn-card-primary" data-open="${r.url}">${t('btnOpen')} ↗</button>
-        <button class="btn-card-ghost"   data-qr="${r.id}">QR</button>
-      </div>
+    <div class="card-actions">
+      <button class="btn-card-primary" data-open="${r.url}">${t('btnOpen')} ↗</button>
+      <button class="btn-card-ghost"   data-qr="${r.id}">QR</button>
     </div>`;
 
   card.querySelector('[data-open]').addEventListener('click', e => {
     e.stopPropagation();
-    window.open(r.url, '_blank', 'noopener,noreferrer');
+    openViewer(r.url, title);
   });
   card.querySelector('[data-qr]').addEventListener('click', e => {
     e.stopPropagation();
@@ -329,4 +322,71 @@ function animateCounters() {
     };
     setTimeout(step, 800);
   });
+}
+
+// ── In-App Viewer ────────────────────────────────────────────────────────────
+
+function toEmbedUrl(url) {
+  // YouTube: watch?v=ID → embed/ID
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s?]+)/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}?rel=0&modestbranding=1`;
+  return url;
+}
+
+function setupViewer() {
+  document.getElementById('viewerBack').addEventListener('click', closeViewer);
+  document.getElementById('viewerScrim').addEventListener('click', closeViewer);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeViewer();
+  });
+}
+
+function openViewer(url, title) {
+  const panel      = document.getElementById('viewerPanel');
+  const scrim      = document.getElementById('viewerScrim');
+  const iframe     = document.getElementById('viewerIframe');
+  const fallback   = document.getElementById('viewerFallback');
+  const titleEl    = document.getElementById('viewerTitle');
+  const extLink    = document.getElementById('viewerExternal');
+  const hintLink   = document.getElementById('viewerHintLink');
+  const fbBtn      = document.getElementById('viewerFallbackBtn');
+
+  titleEl.textContent = title;
+  extLink.href  = url;
+  hintLink.href = url;
+  fbBtn.href    = url;
+
+  fallback.classList.remove('show');
+  iframe.src = toEmbedUrl(url);
+
+  // Detect embed blocks after a brief load attempt
+  let loaded = false;
+  iframe.onload = () => { loaded = true; };
+  setTimeout(() => {
+    if (!loaded) {
+      iframe.style.display = 'none';
+      fallback.classList.add('show');
+    } else {
+      iframe.style.display = '';
+    }
+  }, 6000);
+
+  panel.classList.add('open');
+  scrim.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeViewer() {
+  const panel  = document.getElementById('viewerPanel');
+  const scrim  = document.getElementById('viewerScrim');
+  const iframe = document.getElementById('viewerIframe');
+  panel.classList.remove('open');
+  scrim.classList.remove('open');
+  document.body.style.overflow = '';
+  // Clear iframe after slide-out to stop media
+  setTimeout(() => {
+    iframe.src = '';
+    iframe.style.display = '';
+    document.getElementById('viewerFallback').classList.remove('show');
+  }, 400);
 }

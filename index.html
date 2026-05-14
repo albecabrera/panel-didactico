@@ -146,6 +146,38 @@
     </p>
   </footer>
 
+  <!-- ── In-App Viewer ─────────────────────────────────────────────────── -->
+  <div class="viewer-scrim" id="viewerScrim"></div>
+  <aside class="viewer-panel" id="viewerPanel" role="complementary" aria-label="Eingebettete Seite">
+    <div class="viewer-header">
+      <button class="viewer-back" id="viewerBack" aria-label="Schließen">✕</button>
+      <span class="viewer-title" id="viewerTitle"></span>
+      <a class="viewer-external" id="viewerExternal" target="_blank" rel="noopener noreferrer">
+        ↗ Im Browser
+      </a>
+    </div>
+    <div class="viewer-body">
+      <iframe id="viewerIframe" class="viewer-iframe"
+              allow="autoplay; encrypted-media; fullscreen"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
+              title="Eingebettete Ressource"></iframe>
+      <div class="viewer-fallback" id="viewerFallback">
+        <div class="viewer-fallback-icon">🔒</div>
+        <p class="viewer-fallback-title">Diese Seite erlaubt keine Einbettung</p>
+        <p class="viewer-fallback-sub">Esta página no permite ser incrustada</p>
+        <a class="viewer-fallback-btn" id="viewerFallbackBtn" target="_blank" rel="noopener">
+          Im Browser öffnen ↗
+        </a>
+      </div>
+    </div>
+    <div class="viewer-hint">
+      <span class="viewer-hint-text">Seite lädt nicht? / ¿No carga?</span>
+      <a class="viewer-hint-link" id="viewerHintLink" target="_blank" rel="noopener">
+        Im Browser öffnen ↗
+      </a>
+    </div>
+  </aside>
+
   <!-- ── QR Modal ───────────────────────────────────────────────────────── -->
   <div
     class="modal-overlay"
