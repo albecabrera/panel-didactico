@@ -201,6 +201,55 @@
     </div>
   </div>
 
+  <!-- ── Edit Modal ────────────────────────────────────────────────────── -->
+  <div
+    class="modal-overlay edit-overlay"
+    id="editOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="editHeading"
+  >
+    <div class="modal-card edit-card">
+      <div class="edit-accent"></div>
+      <div class="modal-body">
+        <button class="modal-close" id="editClose" aria-label="Schließen / Cerrar">✕</button>
+        <h2 id="editHeading" class="edit-heading">✎ &thinsp;Bearbeiten / Editar</h2>
+        <form id="editForm" autocomplete="off">
+          <div class="edit-grid">
+            <label class="edit-label">
+              <span>Titel (DE)</span>
+              <input id="editTitleDe" type="text" required>
+            </label>
+            <label class="edit-label">
+              <span>Título (ES)</span>
+              <input id="editTitleEs" type="text" required>
+            </label>
+            <label class="edit-label edit-full">
+              <span>Beschreibung (DE)</span>
+              <textarea id="editDescDe" rows="2"></textarea>
+            </label>
+            <label class="edit-label edit-full">
+              <span>Descripción (ES)</span>
+              <textarea id="editDescEs" rows="2"></textarea>
+            </label>
+            <label class="edit-label edit-full">
+              <span>URL</span>
+              <input id="editUrl" type="url" required placeholder="https://…">
+            </label>
+            <label class="edit-label edit-full">
+              <span>Kurz-URL / URL corta</span>
+              <input id="editShortUrl" type="text" placeholder="ejemplo.com/ruta">
+            </label>
+          </div>
+          <div class="edit-actions">
+            <button type="button" id="editReset" class="edit-btn-reset">↺ Zurücksetzen</button>
+            <button type="submit" class="edit-btn-save">Speichern ✓</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>

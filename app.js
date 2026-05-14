@@ -2,6 +2,25 @@
 
 const STATE = { lang: 'de', theme: 'dark', subject: 'all', type: 'all', search: '' };
 
+// ── LocalStorage overrides ───────────────────────────────────────────────────
+
+const OVERRIDES_KEY = 'edu_overrides';
+
+function getLiveResources() {
+  const ov = JSON.parse(localStorage.getItem(OVERRIDES_KEY) || '{}');
+  return RESOURCES.map(r => ov[r.id] ? { ...r, ...ov[r.id] } : r);
+}
+function saveOverride(id, patch) {
+  const ov = JSON.parse(localStorage.getItem(OVERRIDES_KEY) || '{}');
+  ov[id] = { ...(ov[id] || {}), ...patch };
+  localStorage.setItem(OVERRIDES_KEY, JSON.stringify(ov));
+}
+function resetOverride(id) {
+  const ov = JSON.parse(localStorage.getItem(OVERRIDES_KEY) || '{}');
+  delete ov[id];
+  localStorage.setItem(OVERRIDES_KEY, JSON.stringify(ov));
+}
+
 const I18N = {
   heroTitle:   { de: 'Willkommen im Lernportal',       es: 'Bienvenido al Portal Educativo' },
   heroSub:     { de: 'Dein digitaler Unterrichtszugang', es: 'Tu acceso digital al aula' },
@@ -35,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupTypeFilters();
   setupSearch();
   setupModal();
+  setupEditModal();
   setupViewer();
   setupScrollReveal();
   render();
@@ -142,7 +162,7 @@ function setupSearch() {
 // ── Render ───────────────────────────────────────────────────────────────────
 
 function getFiltered() {
-  return RESOURCES.filter(r => {
+  return getLiveResources().filter(r => {
     if (STATE.subject !== 'all' && r.subject !== STATE.subject) return false;
     if (STATE.type !== 'all' && r.type !== STATE.type) return false;
     if (STATE.search) {
@@ -213,7 +233,8 @@ function buildCard(r, i) {
     <div class="card-actions">
       <button class="btn-card-primary" data-open="${r.url}">${t('btnOpen')} ↗</button>
       <button class="btn-card-ghost"   data-qr="${r.id}">QR</button>
-    </div>`;
+    </div>
+    <button class="btn-card-edit" data-edit="${r.id}" aria-label="Bearbeiten / Editar">✎</button>`;
 
   card.querySelector('[data-open]').addEventListener('click', e => {
     e.stopPropagation();
@@ -222,6 +243,10 @@ function buildCard(r, i) {
   card.querySelector('[data-qr]').addEventListener('click', e => {
     e.stopPropagation();
     openModal(r);
+  });
+  card.querySelector('[data-edit]').addEventListener('click', e => {
+    e.stopPropagation();
+    openEditModal(r);
   });
 
   return card;
@@ -383,10 +408,67 @@ function closeViewer() {
   panel.classList.remove('open');
   scrim.classList.remove('open');
   document.body.style.overflow = '';
-  // Clear iframe after slide-out to stop media
   setTimeout(() => {
     iframe.src = '';
     iframe.style.display = '';
     document.getElementById('viewerFallback').classList.remove('show');
   }, 400);
+}
+
+// ── Edit Modal ───────────────────────────────────────────────────────────────
+
+function setupEditModal() {
+  document.getElementById('editOverlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeEditModal();
+  });
+  document.getElementById('editClose').addEventListener('click', closeEditModal);
+  document.getElementById('editReset').addEventListener('click', () => {
+    const id = Number(document.getElementById('editOverlay').dataset.editId);
+    if (!id) return;
+    resetOverride(id);
+    closeEditModal();
+    render();
+  });
+  document.getElementById('editForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const id = Number(document.getElementById('editOverlay').dataset.editId);
+    if (!id) return;
+    saveOverride(id, {
+      title_de: document.getElementById('editTitleDe').value.trim(),
+      title_es: document.getElementById('editTitleEs').value.trim(),
+      desc_de:  document.getElementById('editDescDe').value.trim(),
+      desc_es:  document.getElementById('editDescEs').value.trim(),
+      url:      document.getElementById('editUrl').value.trim(),
+      shortUrl: document.getElementById('editShortUrl').value.trim(),
+    });
+    closeEditModal();
+    render();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeEditModal();
+  });
+}
+
+function openEditModal(r) {
+  const overlay = document.getElementById('editOverlay');
+  overlay.dataset.editId = r.id;
+
+  document.getElementById('editTitleDe').value  = r.title_de;
+  document.getElementById('editTitleEs').value  = r.title_es;
+  document.getElementById('editDescDe').value   = r.desc_de;
+  document.getElementById('editDescEs').value   = r.desc_es;
+  document.getElementById('editUrl').value      = r.url;
+  document.getElementById('editShortUrl').value = r.shortUrl;
+
+  const ov = JSON.parse(localStorage.getItem(OVERRIDES_KEY) || '{}');
+  document.getElementById('editReset').style.display = ov[r.id] ? '' : 'none';
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('editTitleDe').focus();
+}
+
+function closeEditModal() {
+  document.getElementById('editOverlay').classList.remove('open');
+  document.body.style.overflow = '';
 }
