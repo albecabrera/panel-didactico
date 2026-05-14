@@ -77,10 +77,16 @@ function applyI18n() {
   document.getElementById('statLabelTypes').textContent     = t('statTypes');
 
   document.querySelectorAll('[data-tab]').forEach(tab => {
-    const key = tab.dataset.tab;
-    tab.querySelector('.tab-label').textContent =
-      key === 'all' ? t('tabAll')
+    const key  = tab.dataset.tab;
+    const label = key === 'all'
+      ? t('tabAll')
       : SUBJECT_CONFIG[key][`label_${STATE.lang}`];
+    tab.querySelector('.tab-label').textContent = label;
+    // swap tab icon when subject config has one
+    if (key !== 'all' && SUBJECT_CONFIG[key]?.tabIcon) {
+      const img = tab.querySelector('.tab-icon-img');
+      if (img) img.src = SUBJECT_CONFIG[key].tabIcon;
+    }
   });
 
   document.querySelectorAll('[data-filter]').forEach(btn => {
@@ -195,7 +201,11 @@ function buildCard(r, i) {
     </div>
 
     <div class="card-visual">
-      <span class="card-emoji">${r.emoji}</span>
+      <img class="card-icon-img"
+           src="${r.icon}"
+           alt="${title}"
+           loading="lazy"
+           onerror="this.style.opacity='0.3'">
     </div>
 
     <div class="card-body">

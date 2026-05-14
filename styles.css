@@ -285,8 +285,8 @@ button { font-family:inherit; cursor:pointer; border:none; background:none; }
 }
 .tabs-row::-webkit-scrollbar { display:none; }
 .tab {
-  display:inline-flex; align-items:center; gap:8px;
-  padding:9px 20px;
+  display:inline-flex; align-items:center; gap:9px;
+  padding:9px 18px;
   background:var(--tab-idle);
   border-radius:var(--r-btn);
   font-size:0.88rem; font-weight:500; color:var(--tab-idle-text);
@@ -300,7 +300,17 @@ button { font-family:inherit; cursor:pointer; border:none; background:none; }
   color:var(--tab-active-text);
   font-weight:600;
 }
-.tab-emoji { font-size:1rem; line-height:1; }
+.tab-icon-img {
+  width:22px; height:22px;
+  object-fit:contain;
+  transition:transform 0.25s var(--ease-spring);
+  flex-shrink:0;
+  display:block;
+}
+.tab.active .tab-icon-img { transform:scale(1.1); }
+.tab:hover .tab-icon-img  { transform:scale(1.08); }
+/* fallback: hide broken images gracefully */
+.tab-icon-img[src=""], .tab-icon-img:not([src]) { display:none; }
 .tab-label { font-size:0.88rem; }
 
 /* ── Type filters ───────────────────────────────────────────────────────────── */
@@ -332,13 +342,17 @@ button { font-family:inherit; cursor:pointer; border:none; background:none; }
 }
 
 /* ── Resource Grid ──────────────────────────────────────────────────────────── */
-.grid-section { position:relative; z-index:1; padding:0 24px 100px; }
+.grid-section { position:relative; z-index:1; padding:0 20px 100px; }
 #grid {
   display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(290px,1fr));
+  /* min(100%, 300px) prevents overflow on sub-300px screens */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
   gap:16px;
-  max-width:1320px; margin:0 auto;
+  max-width:1340px; margin:0 auto;
 }
+@media (min-width:640px)  { #grid { grid-template-columns: repeat(2,1fr); } }
+@media (min-width:960px)  { #grid { grid-template-columns: repeat(3,1fr); } }
+@media (min-width:1300px) { #grid { grid-template-columns: repeat(4,1fr); } }
 
 /* ── Card — Apple product tile ──────────────────────────────────────────────── */
 .card {
@@ -346,15 +360,14 @@ button { font-family:inherit; cursor:pointer; border:none; background:none; }
   overflow:hidden;
   background:var(--card-grad, var(--grad-all));
   display:flex; flex-direction:column;
-  padding:28px 28px 24px;
-  min-height:340px;
+  padding:26px 24px 22px;
+  min-height:380px;
   color:#ffffff;
   position:relative;
   transition:transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
   animation:fadeUp 0.6s var(--ease-spring) both;
   will-change:transform;
 }
-/* Subtle noise grain on each card */
 .card::before {
   content:'';
   position:absolute; inset:0;
@@ -364,80 +377,84 @@ button { font-family:inherit; cursor:pointer; border:none; background:none; }
 .card::after {
   content:'';
   position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(255,255,255,.06) 0%, transparent 60%);
+  background:linear-gradient(180deg, rgba(255,255,255,.07) 0%, transparent 55%);
   pointer-events:none; border-radius:inherit;
 }
 .card:hover {
-  transform:scale(1.025) translateY(-4px);
-  box-shadow:0 24px 60px var(--card-glow, rgba(0,0,0,.35));
+  transform:scale(1.022) translateY(-5px);
+  box-shadow:0 28px 64px var(--card-glow, rgba(0,0,0,.38));
 }
 
 /* Card eyebrow */
 .card-eyebrow {
   display:flex; justify-content:space-between; align-items:center;
-  margin-bottom:24px; position:relative; z-index:1;
+  margin-bottom:20px; position:relative; z-index:1;
 }
 .type-chip {
   padding:5px 11px;
-  background:rgba(0,0,0,0.22);
+  background:rgba(0,0,0,0.25);
   border-radius:var(--r-btn);
-  font-size:0.7rem; font-weight:600;
-  letter-spacing:0.04em; text-transform:uppercase;
-  color:rgba(255,255,255,0.80);
+  font-size:0.68rem; font-weight:600;
+  letter-spacing:0.05em; text-transform:uppercase;
+  color:rgba(255,255,255,0.78);
   backdrop-filter:blur(10px);
 }
 .subject-dot {
-  width:8px; height:8px; border-radius:50%;
-  background:rgba(255,255,255,0.45);
+  width:7px; height:7px; border-radius:50%;
+  background:rgba(255,255,255,0.40);
 }
 
-/* Card visual */
+/* Card visual — Icons8 image */
 .card-visual {
-  text-align:center; margin-bottom:20px;
+  text-align:center; margin-bottom:18px;
   position:relative; z-index:1;
 }
-.card-emoji {
-  font-size:3.2rem;
-  display:inline-block;
-  filter:drop-shadow(0 8px 20px rgba(0,0,0,.3));
-  transition:transform 0.3s var(--ease-spring);
+.card-icon-img {
+  width:68px; height:68px;
+  object-fit:contain;
+  filter:drop-shadow(0 6px 16px rgba(0,0,0,0.30));
+  transition:transform 0.3s var(--ease-spring), filter 0.3s var(--ease);
+  display:block; margin:0 auto;
 }
-.card:hover .card-emoji { transform:scale(1.12) translateY(-4px); }
+.card:hover .card-icon-img {
+  transform:scale(1.14) translateY(-5px);
+  filter:drop-shadow(0 12px 24px rgba(0,0,0,0.45));
+}
 
 /* Card body */
 .card-body { flex:1; position:relative; z-index:1; }
 .card-subject {
-  font-size:0.72rem; font-weight:600; letter-spacing:0.05em; text-transform:uppercase;
-  color:rgba(255,255,255,0.55); margin-bottom:6px;
+  font-size:0.7rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;
+  color:rgba(255,255,255,0.50); margin-bottom:5px;
 }
 .card-title {
-  font-size:1.2rem; font-weight:700; letter-spacing:-0.02em; line-height:1.2;
+  font-size:1.15rem; font-weight:700; letter-spacing:-0.02em; line-height:1.25;
   color:#ffffff; margin-bottom:8px;
 }
 .card-desc {
-  font-size:0.83rem; font-weight:400; line-height:1.55;
-  color:rgba(255,255,255,0.65);
+  font-size:0.82rem; font-weight:400; line-height:1.55;
+  color:rgba(255,255,255,0.62);
 }
 
 /* Card footer */
-.card-footer { position:relative; z-index:1; margin-top:20px; }
+.card-footer { position:relative; z-index:1; margin-top:18px; }
 .card-url-chip {
-  display:inline-flex; align-items:center; gap:5px;
+  display:inline-flex; align-items:center; gap:4px;
   padding:5px 10px;
   background:rgba(0,0,0,0.22);
   border-radius:var(--r-chip);
-  font-size:0.7rem; color:rgba(255,255,255,0.55);
+  font-size:0.69rem; color:rgba(255,255,255,0.50);
   font-variant-numeric:tabular-nums;
-  margin-bottom:14px; max-width:100%;
+  margin-bottom:12px; max-width:100%;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(8px);
 }
 .card-actions { display:flex; gap:8px; }
 .btn-card-primary {
   flex:2; padding:10px 14px;
   background:rgba(255,255,255,0.92);
   border-radius:var(--r-btn);
-  font-size:0.83rem; font-weight:600;
+  font-size:0.82rem; font-weight:600;
   color:#000000;
   transition:all 0.2s var(--ease);
   white-space:nowrap;
@@ -445,11 +462,11 @@ button { font-family:inherit; cursor:pointer; border:none; background:none; }
 .btn-card-primary:hover { background:#ffffff; transform:scale(1.02); }
 .btn-card-ghost {
   flex:1; padding:10px 14px;
-  background:rgba(255,255,255,0.12);
-  border:1px solid rgba(255,255,255,0.25);
+  background:rgba(255,255,255,0.11);
+  border:1px solid rgba(255,255,255,0.22);
   border-radius:var(--r-btn);
-  font-size:0.83rem; font-weight:500;
-  color:rgba(255,255,255,0.90);
+  font-size:0.82rem; font-weight:500;
+  color:rgba(255,255,255,0.88);
   backdrop-filter:blur(8px);
   transition:all 0.2s var(--ease);
   white-space:nowrap;
@@ -556,8 +573,9 @@ button { font-family:inherit; cursor:pointer; border:none; background:none; }
 footer {
   position:relative; z-index:1;
   border-top:1px solid var(--sep);
-  padding:28px 24px;
+  padding:24px;
   text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:10px;
 }
 .footer-text {
   font-size:0.75rem; color:var(--text-3);
@@ -565,6 +583,12 @@ footer {
 }
 .footer-link { color:var(--text-2); transition:color 0.2s; }
 .footer-link:hover { color:var(--text); }
+.footer-attribution {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:0.7rem; color:var(--text-3);
+}
+.footer-attribution a { color:var(--text-2); text-decoration:underline; text-underline-offset:3px; }
+.footer-attribution a:hover { color:var(--text); }
 
 /* ── Scroll reveal ───────────────────────────────────────────────────────────── */
 [data-reveal] {
