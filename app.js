@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupModal();
   setupEditModal();
   setupViewer();
+  setupCardGlow();
   setupScrollReveal();
   render();
   animateCounters();
@@ -367,6 +368,10 @@ function setupViewer() {
 }
 
 function openViewer(url, title) {
+  if (toEmbedUrl(url) === url) {
+    window.open(url, '_blank', 'noopener,noreferrer');
+    return;
+  }
   const panel      = document.getElementById('viewerPanel');
   const scrim      = document.getElementById('viewerScrim');
   const iframe     = document.getElementById('viewerIframe');
@@ -413,6 +418,19 @@ function closeViewer() {
     iframe.style.display = '';
     document.getElementById('viewerFallback').classList.remove('show');
   }, 400);
+}
+
+// ── Card cursor glow ─────────────────────────────────────────────────────────
+
+function setupCardGlow() {
+  const grid = document.getElementById('grid');
+  grid.addEventListener('mousemove', e => {
+    const card = e.target.closest('.card');
+    if (!card) return;
+    const { left, top, width, height } = card.getBoundingClientRect();
+    card.style.setProperty('--mx', `${((e.clientX - left) / width * 100).toFixed(1)}%`);
+    card.style.setProperty('--my', `${((e.clientY - top) / height * 100).toFixed(1)}%`);
+  });
 }
 
 // ── Edit Modal ───────────────────────────────────────────────────────────────
