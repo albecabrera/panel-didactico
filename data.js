@@ -157,31 +157,28 @@ const RESOURCES = [
 const SUBJECT_CONFIG = {
   espanol: {
     label_de: 'Spanisch',     label_es: 'Español',
-    // Wine-crimson → Spanish amber: warm, Mediterranean, not generic red
-    gradient: 'linear-gradient(145deg, #7C1D3B 0%, #B91C1C 50%, #D97706 100%)',
-    glow: 'rgba(185,28,28,0.40)',
+    gradient: 'linear-gradient(145deg, #1e0d13 0%, #2e1119 55%, #251010 100%)',
+    glow: 'rgba(180,40,65,0.30)',
     badge_bg: 'rgba(185,28,28,0.15)',
-    badge_border: 'rgba(185,28,28,0.35)',
+    badge_border: 'rgba(185,28,28,0.25)',
     badge_color: '#FCA5A5',
     tabIcon: I8('language-skill', 48),
   },
   informatik: {
     label_de: 'Informatik',   label_es: 'Informática',
-    // Midnight navy → royal blue: precise, technical depth
-    gradient: 'linear-gradient(145deg, #0F172A 0%, #1E40AF 55%, #2563EB 100%)',
-    glow: 'rgba(37,99,235,0.40)',
+    gradient: 'linear-gradient(145deg, #0c172e 0%, #102040 55%, #0c192e 100%)',
+    glow: 'rgba(37,100,220,0.30)',
     badge_bg: 'rgba(37,99,235,0.15)',
-    badge_border: 'rgba(37,99,235,0.35)',
+    badge_border: 'rgba(37,99,235,0.25)',
     badge_color: '#93C5FD',
     tabIcon: I8('laptop-coding', 48),
   },
   sport: {
     label_de: 'Sport',        label_es: 'Deporte',
-    // Forest → emerald: natural energy, athletic, not generic green
-    gradient: 'linear-gradient(145deg, #064E3B 0%, #065F46 45%, #059669 100%)',
-    glow: 'rgba(5,150,105,0.40)',
+    gradient: 'linear-gradient(145deg, #0a1e12 0%, #0d2818 55%, #0a1e12 100%)',
+    glow: 'rgba(10,150,85,0.30)',
     badge_bg: 'rgba(5,150,105,0.15)',
-    badge_border: 'rgba(5,150,105,0.35)',
+    badge_border: 'rgba(5,150,105,0.25)',
     badge_color: '#6EE7B7',
     tabIcon: I8('football2', 48),
   },
